@@ -1,0 +1,4 @@
+npm i --save-dev react@18.2.0 react-dom@18.2.0
+rm -r dist
+npm run build
+npm r react react-dom

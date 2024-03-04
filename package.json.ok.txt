@@ -1,0 +1,36 @@
+{
+  "name": "away-react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/esm/index.js",
+  "modules": "dist/commonjs/index.js",
+  "types": "dist/esm/index.d.ts",
+  "files": [
+    "dist/esm"
+  ],
+  "scripts": {
+    "build": "tsc && tsc --module commonjs --outDir dist/commonjs",
+    "build-esm": "tsc",
+    "build-commonjs": "tsc --module commonjs --outDir dist/commonjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prepublish": "tsc",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/layer92/away-react-ts.git"
+  },
+  "author": "layer92",
+  "license": "0BSD",
+  "bugs": {
+    "url": "https://github.com/layer92/away-react-ts/issues"
+  },
+  "homepage": "https://github.com/layer92/away-react-ts#readme",
+  "dependencies": {
+    "@types/node": "^20.8.6",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.2.2"
+  }
+}
