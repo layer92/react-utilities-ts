@@ -1,0 +1,36 @@
+{
+  "name": "@layer92/react-utilities",
+  "version": "0.0.1",
+  "description": "",
+  "main": "compiled/esm/index.js",
+  "modules": "compiled/commonjs/index.js",
+  "types": "compiled/esm/index.d.ts",
+  "files": [
+    "compiled/esm"
+  ],
+  "scripts": {
+    "build": "tsc && tsc --module commonjs --outDir compiled/commonjs",
+    "build-esm": "tsc",
+    "build-commonjs": "tsc --module commonjs --outDir compiled/commonjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prepublish": "tsc",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/layer92/react-utilities-ts.git"
+  },
+  "author": "layer92",
+  "license": "0BSD",
+  "bugs": {
+    "url": "https://github.com/layer92/react-utilities-ts/issues"
+  },
+  "homepage": "https://github.com/layer92/react-utilities-ts#readme",
+  "dependencies": {
+    "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
+    "@types/react-router-dom": "5.3.3"
+  }
+}

@@ -1,0 +1,87 @@
+import { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
+export function UseAsyncEffect(callback, dependencies) {
+    useEffect(() => {
+        callback();
+    }, dependencies);
+}
+/**
+ * The returned value will be undefined until the callback completes (after which it will be the result of the callback).
+ */
+export function UseResult(callback, dependencies) {
+    const [value, setValue] = useState();
+    async function getResultSetValue() {
+        const result = await callback();
+        setValue(result);
+    }
+    UseAsyncEffect(getResultSetValue, dependencies);
+    return value;
+}
+export function UseResultOnMount(callback) {
+    return UseResult(callback, []);
+}
+export function UseLocalStorageValue(localStorageKey, initialValue) {
+    function makeInitialValue() {
+        const jsonString = localStorage.getItem(localStorageKey);
+        if (!jsonString) {
+            return initialValue;
+        }
+        return JSON.parse(jsonString);
+    }
+    const [value, setValueInReact] = useState(makeInitialValue());
+    function setValue(value) {
+        localStorage.setItem(localStorageKey, JSON.stringify(value));
+        setValueInReact(value);
+    }
+    return [value, setValue];
+}
+export function UseComponentDidMount(callback) {
+    UseAsyncEffect(callback, []);
+}
+export function UseDelayedComponentDidMount(callback, delayMs) {
+    function callbackWithDelay() {
+        setTimeout(callback, delayMs);
+    }
+    UseAsyncEffect(callbackWithDelay, []);
+}
+export function UseDelayedEffect(callback, dependencies, delayMs) {
+    function callbackWithDelay() {
+        setTimeout(callback, delayMs);
+    }
+    UseAsyncEffect(callbackWithDelay, dependencies);
+}
+export function UseComponentDidUpdate(callback) {
+    UseAsyncEffect(callback);
+}
+export function UseComponentWillUnmount(callback) {
+    useEffect(() => {
+        return () => {
+            callback();
+        };
+    }, []);
+}
+export function UseLoopWhileMounted(callback, intervalMs) {
+    const tracker = { unmounted: false };
+    async function loopAsync() {
+        // console.log(tracker);
+        if (tracker.unmounted) {
+            return;
+        }
+        await callback();
+        setTimeout(loopAsync, intervalMs);
+    }
+    UseComponentDidMount(loopAsync);
+    UseComponentWillUnmount(() => {
+        tracker.unmounted = true;
+    });
+}
+export function UseQueryParameter(parameterKey) {
+    const [searchParams] = useSearchParams();
+    const value = searchParams.get(parameterKey);
+    return value;
+}
+export function UseUrlParameter(parameterKey) {
+    const params = useParams();
+    const value = params[parameterKey];
+    return value;
+}

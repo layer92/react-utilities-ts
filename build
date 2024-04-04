@@ -1,0 +1,4 @@
+npm i --save-dev react@18.2.0 react-dom@18.2.0 react-router-dom@6.7.0
+rm -r compiled
+npm run build
+npm r react react-dom react-router-dom
