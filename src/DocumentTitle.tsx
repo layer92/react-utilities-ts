@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { UseComponentDidMount } from "./ReactHooks";
 
 export function DocumentTitle({
     children
@@ -7,6 +8,7 @@ export function DocumentTitle({
 }){
     useEffect(()=>{
         document.title = ''+children;
-    },[]);
+        console.log(document.title);
+    },[children]);
     return <></>;
 }
