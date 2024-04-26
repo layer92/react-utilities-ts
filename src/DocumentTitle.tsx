@@ -8,7 +8,6 @@ export function DocumentTitle({
 }){
     useEffect(()=>{
         document.title = ''+children;
-        console.log(document.title);
     },[children]);
     return <></>;
 }
