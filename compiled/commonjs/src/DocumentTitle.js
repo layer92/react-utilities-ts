@@ -6,7 +6,6 @@ const react_1 = require("react");
 function DocumentTitle({ children }) {
     (0, react_1.useEffect)(() => {
         document.title = '' + children;
-        console.log(document.title);
     }, [children]);
     return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {});
 }

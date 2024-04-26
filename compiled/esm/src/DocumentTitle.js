@@ -3,7 +3,6 @@ import { useEffect } from "react";
 export function DocumentTitle({ children }) {
     useEffect(() => {
         document.title = '' + children;
-        console.log(document.title);
     }, [children]);
     return _jsx(_Fragment, {});
 }
