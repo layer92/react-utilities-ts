@@ -90,13 +90,19 @@ function UseLoopWhileMounted(callback, intervalMs) {
 exports.UseLoopWhileMounted = UseLoopWhileMounted;
 function UseQueryParameter(parameterKey) {
     const [searchParams] = (0, react_router_dom_1.useSearchParams)();
-    const value = searchParams.get(parameterKey);
+    let value = searchParams.get(parameterKey);
+    if (value === null) {
+        value = undefined;
+    }
     return value;
 }
 exports.UseQueryParameter = UseQueryParameter;
 function UseUrlParameter(parameterKey) {
     const params = (0, react_router_dom_1.useParams)();
-    const value = params[parameterKey];
+    let value = params[parameterKey];
+    if (value === null) {
+        value = undefined;
+    }
     return value;
 }
 exports.UseUrlParameter = UseUrlParameter;

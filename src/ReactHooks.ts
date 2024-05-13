@@ -98,14 +98,20 @@ export function UseLoopWhileMounted(callback:Callback,intervalMs:number){
 }
 
 
-export function UseQueryParameter(parameterKey:string){
+export function UseQueryParameter(parameterKey:string):string|undefined{
     const [searchParams] = useSearchParams();
-    const value = searchParams.get(parameterKey);
+    let value:string|null|undefined = searchParams.get(parameterKey);
+    if(value===null){
+        value = undefined;
+    }
     return value;
 }
 
-export function UseUrlParameter(parameterKey:string){
+export function UseUrlParameter(parameterKey:string):string|undefined{
     const params = useParams();
-    const value = params[parameterKey];
+    let value = params[parameterKey as keyof typeof params];
+    if(value===null){
+        value = undefined;
+    }
     return value;
 }

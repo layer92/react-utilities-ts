@@ -15,6 +15,6 @@ export declare function UseDelayedEffect(callback: Callback, dependencies: Depen
 export declare function UseComponentDidUpdate(callback: Callback): void;
 export declare function UseComponentWillUnmount(callback: Callback): void;
 export declare function UseLoopWhileMounted(callback: Callback, intervalMs: number): void;
-export declare function UseQueryParameter(parameterKey: string): string | null;
+export declare function UseQueryParameter(parameterKey: string): string | undefined;
 export declare function UseUrlParameter(parameterKey: string): string | undefined;
 export {};
