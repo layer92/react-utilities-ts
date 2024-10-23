@@ -8,6 +8,7 @@ export declare function UseAsyncEffect(callback: Callback, dependencies?: Depend
  */
 export declare function UseResult<ResultType>(callback: ResultCallback<ResultType>, dependencies?: Dependencies): ResultType | undefined;
 export declare function UseResultOnMount<ResultType>(callback: ResultCallback<ResultType>): ResultType | undefined;
+/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. */
 export declare function UseLocalStorageValue<ValueType>(localStorageKey: string, initialValue: ValueType): readonly [ValueType, (value: ValueType) => void];
 export declare function UseComponentDidMount(callback: Callback): void;
 export declare function UseDelayedComponentDidMount(callback: Callback, delayMs: number): void;
@@ -17,4 +18,13 @@ export declare function UseComponentWillUnmount(callback: Callback): void;
 export declare function UseLoopWhileMounted(callback: Callback, intervalMs: number): void;
 export declare function UseQueryParameter(parameterKey: string): string | undefined;
 export declare function UseUrlParameter(parameterKey: string): string | undefined;
+/**
+ * Debounces a value.
+ * @param value The raw value that may change frequently.
+ * @param options.delayMs The amount of time that the raw value must go unchanged before the decouncedValue is changed. Default is 500ms.
+ * @returns The debouncedValue that will change slowly.
+ */
+export declare function UseDebouncedValue<Value>(value: Value, options?: {
+    delayMs?: number;
+}): Value;
 export {};

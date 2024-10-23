@@ -31,6 +31,7 @@ export function UseResultOnMount<ResultType>(callback:ResultCallback<ResultType>
     return UseResult(callback,[]);
 }
 
+/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. */
 export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialValue:ValueType){
     function makeInitialValue(){
         const jsonString = localStorage.getItem(localStorageKey);
@@ -114,4 +115,20 @@ export function UseUrlParameter(parameterKey:string):string|undefined{
         value = undefined;
     }
     return value;
+}
+
+/**
+ * Debounces a value.
+ * @param value The raw value that may change frequently.
+ * @param options.delayMs The amount of time that the raw value must go unchanged before the decouncedValue is changed. Default is 500ms.
+ * @returns The debouncedValue that will change slowly.
+ */
+export function UseDebouncedValue<Value>(value:Value,options?:{delayMs?:number}){
+    const delayMs = options?.delayMs ?? 500;
+    const [debouncedValue,setDebouncedValue] = useState(value);
+    useEffect(()=>{
+        const timeout = setTimeout(()=>setDebouncedValue(value), delayMs);
+        return ()=>clearTimeout(timeout);
+    },[value]);
+    return debouncedValue;
 }

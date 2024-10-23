@@ -20,6 +20,7 @@ export function UseResult(callback, dependencies) {
 export function UseResultOnMount(callback) {
     return UseResult(callback, []);
 }
+/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. */
 export function UseLocalStorageValue(localStorageKey, initialValue) {
     function makeInitialValue() {
         const jsonString = localStorage.getItem(localStorageKey);
@@ -90,4 +91,19 @@ export function UseUrlParameter(parameterKey) {
         value = undefined;
     }
     return value;
+}
+/**
+ * Debounces a value.
+ * @param value The raw value that may change frequently.
+ * @param options.delayMs The amount of time that the raw value must go unchanged before the decouncedValue is changed. Default is 500ms.
+ * @returns The debouncedValue that will change slowly.
+ */
+export function UseDebouncedValue(value, options) {
+    const delayMs = options?.delayMs ?? 500;
+    const [debouncedValue, setDebouncedValue] = useState(value);
+    useEffect(() => {
+        const timeout = setTimeout(() => setDebouncedValue(value), delayMs);
+        return () => clearTimeout(timeout);
+    }, [value]);
+    return debouncedValue;
 }

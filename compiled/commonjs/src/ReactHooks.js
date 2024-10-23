@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
+exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
 const react_1 = require("react");
 const react_router_dom_1 = require("react-router-dom");
 function UseAsyncEffect(callback, dependencies) {
@@ -26,6 +26,7 @@ function UseResultOnMount(callback) {
     return UseResult(callback, []);
 }
 exports.UseResultOnMount = UseResultOnMount;
+/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. */
 function UseLocalStorageValue(localStorageKey, initialValue) {
     function makeInitialValue() {
         const jsonString = localStorage.getItem(localStorageKey);
@@ -106,3 +107,19 @@ function UseUrlParameter(parameterKey) {
     return value;
 }
 exports.UseUrlParameter = UseUrlParameter;
+/**
+ * Debounces a value.
+ * @param value The raw value that may change frequently.
+ * @param options.delayMs The amount of time that the raw value must go unchanged before the decouncedValue is changed. Default is 500ms.
+ * @returns The debouncedValue that will change slowly.
+ */
+function UseDebouncedValue(value, options) {
+    const delayMs = options?.delayMs ?? 500;
+    const [debouncedValue, setDebouncedValue] = (0, react_1.useState)(value);
+    (0, react_1.useEffect)(() => {
+        const timeout = setTimeout(() => setDebouncedValue(value), delayMs);
+        return () => clearTimeout(timeout);
+    }, [value]);
+    return debouncedValue;
+}
+exports.UseDebouncedValue = UseDebouncedValue;
