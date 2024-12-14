@@ -35,14 +35,18 @@ export function UseResultOnMount<ResultType>(callback:ResultCallback<ResultType>
 export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialValue:ValueType){
     function makeInitialValue(){
         const jsonString = localStorage.getItem(localStorageKey);
-        if(!jsonString){
+        if(jsonString===null){
             return initialValue;
         }
         return JSON.parse(jsonString) as ValueType;
     }
     const [value,setValueInReact] = useState<ValueType>(makeInitialValue());
     function setValue(value:ValueType){
-        localStorage.setItem(localStorageKey,JSON.stringify(value));
+        if(value===undefined||value===null){
+            localStorage.removeItem(localStorageKey);
+        }else{
+            localStorage.setItem(localStorageKey,JSON.stringify(value));
+        }
         setValueInReact(value);
     }
     return [value,setValue] as const;

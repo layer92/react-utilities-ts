@@ -30,14 +30,19 @@ exports.UseResultOnMount = UseResultOnMount;
 function UseLocalStorageValue(localStorageKey, initialValue) {
     function makeInitialValue() {
         const jsonString = localStorage.getItem(localStorageKey);
-        if (!jsonString) {
+        if (jsonString === null) {
             return initialValue;
         }
         return JSON.parse(jsonString);
     }
     const [value, setValueInReact] = (0, react_1.useState)(makeInitialValue());
     function setValue(value) {
-        localStorage.setItem(localStorageKey, JSON.stringify(value));
+        if (value === undefined || value === null) {
+            localStorage.removeItem(localStorageKey);
+        }
+        else {
+            localStorage.setItem(localStorageKey, JSON.stringify(value));
+        }
         setValueInReact(value);
     }
     return [value, setValue];

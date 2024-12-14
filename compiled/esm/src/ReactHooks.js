@@ -24,14 +24,19 @@ export function UseResultOnMount(callback) {
 export function UseLocalStorageValue(localStorageKey, initialValue) {
     function makeInitialValue() {
         const jsonString = localStorage.getItem(localStorageKey);
-        if (!jsonString) {
+        if (jsonString === null) {
             return initialValue;
         }
         return JSON.parse(jsonString);
     }
     const [value, setValueInReact] = useState(makeInitialValue());
     function setValue(value) {
-        localStorage.setItem(localStorageKey, JSON.stringify(value));
+        if (value === undefined || value === null) {
+            localStorage.removeItem(localStorageKey);
+        }
+        else {
+            localStorage.setItem(localStorageKey, JSON.stringify(value));
+        }
         setValueInReact(value);
     }
     return [value, setValue];
