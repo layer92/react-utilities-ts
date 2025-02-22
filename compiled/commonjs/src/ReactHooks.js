@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
+exports.UseDebouncedCallback = exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
 const react_1 = require("react");
 const react_router_dom_1 = require("react-router-dom");
 function UseAsyncEffect(callback, dependencies) {
@@ -128,3 +128,18 @@ function UseDebouncedValue(value, options) {
     return debouncedValue;
 }
 exports.UseDebouncedValue = UseDebouncedValue;
+/**
+ * Creates a function that, when called, calls the callback with debouncing.
+ * @param callback The function to call. If called multiple times within a short internal, only the last call will take place.
+ * @param options.delayMs The amount of time that the raw value must go unchanged before the decouncedValue is changed. Default is 500ms.
+ * @returns The debouncedValue that will change slowly.
+ */
+function UseDebouncedCallback(callback, options) {
+    const delayMs = options?.delayMs ?? 500;
+    const debouncedCallback = () => {
+        const timeout = setTimeout(callback, delayMs);
+        return () => clearTimeout(timeout);
+    };
+    return debouncedCallback;
+}
+exports.UseDebouncedCallback = UseDebouncedCallback;
