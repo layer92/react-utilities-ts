@@ -143,11 +143,13 @@ export function UseDebouncedValue<Value>(value:Value,options?:{delayMs?:number})
  * @param options.delayMs The amount of time that the raw value must go unchanged before the decouncedValue is changed. Default is 500ms.
  * @returns The debouncedValue that will change slowly.
  */
-export function UseDebouncedCallback<Callback extends ()=>void>(callback:Callback,options?:{delayMs?:number}){
+export function UseDebouncedCallback<Callback extends (...parameters:any[])=>void>(callback:Callback,options?:{delayMs?:number}):Callback{
     const delayMs = options?.delayMs ?? 500;
-    const debouncedCallback = ()=>{
-        const timeout = setTimeout(callback, delayMs);
-        return ()=>clearTimeout(timeout);
+    let timeouts:number[] = [];
+    const debouncedCallback = (...parameters:any[])=>{
+        timeouts.splice(0);
+        const timeout = setTimeout(()=>callback.call(undefined,...parameters), delayMs);
+        timeouts.push(timeout);
     }
-    return debouncedCallback;
+    return debouncedCallback as Callback;
 }

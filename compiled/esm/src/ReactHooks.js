@@ -120,9 +120,11 @@ export function UseDebouncedValue(value, options) {
  */
 export function UseDebouncedCallback(callback, options) {
     const delayMs = options?.delayMs ?? 500;
-    const debouncedCallback = () => {
-        const timeout = setTimeout(callback, delayMs);
-        return () => clearTimeout(timeout);
+    let timeouts = [];
+    const debouncedCallback = (...parameters) => {
+        timeouts.splice(0);
+        const timeout = setTimeout(() => callback.call(undefined, ...parameters), delayMs);
+        timeouts.push(timeout);
     };
     return debouncedCallback;
 }

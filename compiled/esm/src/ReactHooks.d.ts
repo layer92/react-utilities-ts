@@ -33,7 +33,7 @@ export declare function UseDebouncedValue<Value>(value: Value, options?: {
  * @param options.delayMs The amount of time that the raw value must go unchanged before the decouncedValue is changed. Default is 500ms.
  * @returns The debouncedValue that will change slowly.
  */
-export declare function UseDebouncedCallback<Callback extends () => void>(callback: Callback, options?: {
+export declare function UseDebouncedCallback<Callback extends (...parameters: any[]) => void>(callback: Callback, options?: {
     delayMs?: number;
-}): () => () => void;
+}): Callback;
 export {};
