@@ -36,7 +36,7 @@ export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialVa
     function loadOrSetInitialValue_getInitialValue(){
         const jsonString = localStorage.getItem(localStorageKey);
         if(jsonString===null){
-            if(value!==undefined&&value!==null){
+            if(initialValue!==undefined&&initialValue!==null){
                 localStorage.setItem(localStorageKey,JSON.stringify(initialValue));
             }
             return initialValue;
