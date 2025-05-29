@@ -33,14 +33,17 @@ export function UseResultOnMount<ResultType>(callback:ResultCallback<ResultType>
 
 /** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. */
 export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialValue:ValueType){
-    function makeInitialValue(){
+    function loadOrSetInitialValue_getInitialValue(){
         const jsonString = localStorage.getItem(localStorageKey);
         if(jsonString===null){
+            if(value!==undefined&&value!==null){
+                localStorage.setItem(localStorageKey,JSON.stringify(initialValue));
+            }
             return initialValue;
         }
         return JSON.parse(jsonString) as ValueType;
     }
-    const [value,setValueInReact] = useState<ValueType>(makeInitialValue());
+    const [value,setValueInReact] = useState<ValueType>(loadOrSetInitialValue_getInitialValue());
     function setValue(value:ValueType){
         if(value===undefined||value===null){
             localStorage.removeItem(localStorageKey);
@@ -138,6 +141,7 @@ export function UseDebouncedValue<Value>(value:Value,options?:{delayMs?:number})
 }
 
 /**
+ * NOTE: Untested
  * Creates a function that, when called, calls the callback with debouncing.
  * @param callback The function to call. If called multiple times within a short internal, only the last call will take place.
  * @param options.delayMs The amount of time that the raw value must go unchanged before the decouncedValue is changed. Default is 500ms.

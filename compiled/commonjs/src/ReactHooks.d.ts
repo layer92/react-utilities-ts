@@ -28,6 +28,7 @@ export declare function UseDebouncedValue<Value>(value: Value, options?: {
     delayMs?: number;
 }): Value;
 /**
+ * NOTE: Untested
  * Creates a function that, when called, calls the callback with debouncing.
  * @param callback The function to call. If called multiple times within a short internal, only the last call will take place.
  * @param options.delayMs The amount of time that the raw value must go unchanged before the decouncedValue is changed. Default is 500ms.
