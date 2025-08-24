@@ -55,6 +55,31 @@ export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialVa
     return [value,setValue] as const;
 }
 
+
+/** Saves the provided value to sessionstorage. Handles JSON serialization/deserialization for you. */
+export function UseSessionStorageValue<ValueType>(sessionStorageKey:string,initialValue:ValueType){
+    function loadOrSetInitialValue_getInitialValue(){
+        const jsonString = sessionStorage.getItem(sessionStorageKey);
+        if(jsonString===null){
+            if(initialValue!==undefined&&initialValue!==null){
+                sessionStorage.setItem(sessionStorageKey,JSON.stringify(initialValue));
+            }
+            return initialValue;
+        }
+        return JSON.parse(jsonString) as ValueType;
+    }
+    const [value,setValueInReact] = useState<ValueType>(loadOrSetInitialValue_getInitialValue());
+    function setValue(value:ValueType){
+        if(value===undefined||value===null){
+            sessionStorage.removeItem(sessionStorageKey);
+        }else{
+            sessionStorage.setItem(sessionStorageKey,JSON.stringify(value));
+        }
+        setValueInReact(value);
+    }
+    return [value,setValue] as const;
+}
+
 export function UseComponentDidMount(callback:Callback){
     UseAsyncEffect(callback,[]);
 }

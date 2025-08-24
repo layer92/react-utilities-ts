@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UseDebouncedCallback = exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
+exports.UseDebouncedCallback = exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseSessionStorageValue = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
 const react_1 = require("react");
 const react_router_dom_1 = require("react-router-dom");
 function UseAsyncEffect(callback, dependencies) {
@@ -51,6 +51,31 @@ function UseLocalStorageValue(localStorageKey, initialValue) {
     return [value, setValue];
 }
 exports.UseLocalStorageValue = UseLocalStorageValue;
+/** Saves the provided value to sessionstorage. Handles JSON serialization/deserialization for you. */
+function UseSessionStorageValue(sessionStorageKey, initialValue) {
+    function loadOrSetInitialValue_getInitialValue() {
+        const jsonString = sessionStorage.getItem(sessionStorageKey);
+        if (jsonString === null) {
+            if (initialValue !== undefined && initialValue !== null) {
+                sessionStorage.setItem(sessionStorageKey, JSON.stringify(initialValue));
+            }
+            return initialValue;
+        }
+        return JSON.parse(jsonString);
+    }
+    const [value, setValueInReact] = (0, react_1.useState)(loadOrSetInitialValue_getInitialValue());
+    function setValue(value) {
+        if (value === undefined || value === null) {
+            sessionStorage.removeItem(sessionStorageKey);
+        }
+        else {
+            sessionStorage.setItem(sessionStorageKey, JSON.stringify(value));
+        }
+        setValueInReact(value);
+    }
+    return [value, setValue];
+}
+exports.UseSessionStorageValue = UseSessionStorageValue;
 function UseComponentDidMount(callback) {
     UseAsyncEffect(callback, []);
 }

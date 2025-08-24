@@ -10,6 +10,8 @@ export declare function UseResult<ResultType>(callback: ResultCallback<ResultTyp
 export declare function UseResultOnMount<ResultType>(callback: ResultCallback<ResultType>): ResultType | undefined;
 /** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. */
 export declare function UseLocalStorageValue<ValueType>(localStorageKey: string, initialValue: ValueType): readonly [ValueType, (value: ValueType) => void];
+/** Saves the provided value to sessionstorage. Handles JSON serialization/deserialization for you. */
+export declare function UseSessionStorageValue<ValueType>(sessionStorageKey: string, initialValue: ValueType): readonly [ValueType, (value: ValueType) => void];
 export declare function UseComponentDidMount(callback: Callback): void;
 export declare function UseDelayedComponentDidMount(callback: Callback, delayMs: number): void;
 export declare function UseDelayedEffect(callback: Callback, dependencies: Dependencies, delayMs: number): void;
