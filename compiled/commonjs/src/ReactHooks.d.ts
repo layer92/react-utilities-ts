@@ -15,6 +15,8 @@ export declare function UseSessionStorageValue<ValueType>(sessionStorageKey: str
 export declare function UseComponentDidMount(callback: Callback): void;
 export declare function UseDelayedComponentDidMount(callback: Callback, delayMs: number): void;
 export declare function UseDelayedEffect(callback: Callback, dependencies: Dependencies, delayMs: number): void;
+/** Return FALSE from the callback if not ready yet. When the callback returns UNDEFINED, it won't be called again. */
+export declare function UseEffectOnceCompletely(callback: ResultCallback<false | undefined>, dependencies: Dependencies): void;
 /** When all of the dependencies become defined, the callback will be called once. */
 export declare function UseEffectOnceWhenDefined(callback: Callback, dependencies: Dependencies): void;
 /** When all of the dependencies become truthy, the callback will be called once. */

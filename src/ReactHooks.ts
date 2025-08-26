@@ -98,6 +98,20 @@ export function UseDelayedEffect(callback:Callback,dependencies:Dependencies,del
     UseAsyncEffect(callbackWithDelay,dependencies);
 }
 
+/** Return FALSE from the callback if not ready yet. When the callback returns UNDEFINED, it won't be called again. */
+export function UseEffectOnceCompletely(callback:ResultCallback<false|undefined>,dependencies:Dependencies){
+    const [isCompleted,setIsCompleted] = useState(false);
+    UseAsyncEffect(async ()=>{
+        if(isCompleted){
+            return;
+        }
+        const result = await callback();
+        if(result===undefined){
+            setIsCompleted(true);
+        }
+    },[dependencies]);
+}
+
 /** When all of the dependencies become defined, the callback will be called once. */
 export function UseEffectOnceWhenDefined(callback:Callback,dependencies:Dependencies){
     const [isCalled,setIsCalled] = useState(false);

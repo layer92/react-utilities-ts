@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UseDebouncedCallback = exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseEffectWhileTruthy = exports.UseEffectWhileDefined = exports.UseEffectOnceWhenTruthy = exports.UseEffectOnceWhenDefined = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseSessionStorageValue = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
+exports.UseDebouncedCallback = exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseEffectWhileTruthy = exports.UseEffectWhileDefined = exports.UseEffectOnceWhenTruthy = exports.UseEffectOnceWhenDefined = exports.UseEffectOnceCompletely = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseSessionStorageValue = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
 const react_1 = require("react");
 const react_router_dom_1 = require("react-router-dom");
 function UseAsyncEffect(callback, dependencies) {
@@ -94,6 +94,20 @@ function UseDelayedEffect(callback, dependencies, delayMs) {
     UseAsyncEffect(callbackWithDelay, dependencies);
 }
 exports.UseDelayedEffect = UseDelayedEffect;
+/** Return FALSE from the callback if not ready yet. When the callback returns UNDEFINED, it won't be called again. */
+function UseEffectOnceCompletely(callback, dependencies) {
+    const [isCompleted, setIsCompleted] = (0, react_1.useState)(false);
+    UseAsyncEffect(async () => {
+        if (isCompleted) {
+            return;
+        }
+        const result = await callback();
+        if (result === undefined) {
+            setIsCompleted(true);
+        }
+    }, [dependencies]);
+}
+exports.UseEffectOnceCompletely = UseEffectOnceCompletely;
 /** When all of the dependencies become defined, the callback will be called once. */
 function UseEffectOnceWhenDefined(callback, dependencies) {
     const [isCalled, setIsCalled] = (0, react_1.useState)(false);
