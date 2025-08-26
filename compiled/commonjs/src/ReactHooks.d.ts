@@ -15,6 +15,14 @@ export declare function UseSessionStorageValue<ValueType>(sessionStorageKey: str
 export declare function UseComponentDidMount(callback: Callback): void;
 export declare function UseDelayedComponentDidMount(callback: Callback, delayMs: number): void;
 export declare function UseDelayedEffect(callback: Callback, dependencies: Dependencies, delayMs: number): void;
+/** When all of the dependencies become defined, the callback will be called once. */
+export declare function UseEffectOnceWhenDefined(callback: Callback, dependencies: Dependencies): void;
+/** When all of the dependencies become truthy, the callback will be called once. */
+export declare function UseEffectOnceWhenTruthy(callback: Callback, dependencies: Dependencies): void;
+/** Just like UseAsyncEffect, except the callback will only be enabled while all the dependencies are defined. */
+export declare function UseEffectWhileDefined(callback: Callback, dependencies: Dependencies): void;
+/** Just like UseAsyncEffect, except the callback will only be enabled while all the dependencies are truthy. */
+export declare function UseEffectWhileTruthy(callback: Callback, dependencies: Dependencies): void;
 export declare function UseComponentDidUpdate(callback: Callback): void;
 export declare function UseComponentWillUnmount(callback: Callback): void;
 export declare function UseLoopWhileMounted(callback: Callback, intervalMs: number): void;

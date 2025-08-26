@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UseDebouncedCallback = exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseSessionStorageValue = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
+exports.UseDebouncedCallback = exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseEffectWhileTruthy = exports.UseEffectWhileDefined = exports.UseEffectOnceWhenTruthy = exports.UseEffectOnceWhenDefined = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseSessionStorageValue = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
 const react_1 = require("react");
 const react_router_dom_1 = require("react-router-dom");
 function UseAsyncEffect(callback, dependencies) {
@@ -94,6 +94,56 @@ function UseDelayedEffect(callback, dependencies, delayMs) {
     UseAsyncEffect(callbackWithDelay, dependencies);
 }
 exports.UseDelayedEffect = UseDelayedEffect;
+/** When all of the dependencies become defined, the callback will be called once. */
+function UseEffectOnceWhenDefined(callback, dependencies) {
+    const [isCalled, setIsCalled] = (0, react_1.useState)(false);
+    UseAsyncEffect(async () => {
+        if (isCalled) {
+            return;
+        }
+        if (dependencies.some(a => a === undefined)) {
+            return;
+        }
+        setIsCalled(true);
+        await callback();
+    }, [dependencies]);
+}
+exports.UseEffectOnceWhenDefined = UseEffectOnceWhenDefined;
+/** When all of the dependencies become truthy, the callback will be called once. */
+function UseEffectOnceWhenTruthy(callback, dependencies) {
+    const [isCalled, setIsCalled] = (0, react_1.useState)(false);
+    UseAsyncEffect(async () => {
+        if (isCalled) {
+            return;
+        }
+        if (dependencies.some(a => !a)) {
+            return;
+        }
+        setIsCalled(true);
+        await callback();
+    }, [dependencies]);
+}
+exports.UseEffectOnceWhenTruthy = UseEffectOnceWhenTruthy;
+/** Just like UseAsyncEffect, except the callback will only be enabled while all the dependencies are defined. */
+function UseEffectWhileDefined(callback, dependencies) {
+    UseAsyncEffect(async () => {
+        if (dependencies.some(a => a === undefined)) {
+            return;
+        }
+        await callback();
+    }, [dependencies]);
+}
+exports.UseEffectWhileDefined = UseEffectWhileDefined;
+/** Just like UseAsyncEffect, except the callback will only be enabled while all the dependencies are truthy. */
+function UseEffectWhileTruthy(callback, dependencies) {
+    UseAsyncEffect(async () => {
+        if (dependencies.some(a => !a)) {
+            return;
+        }
+        await callback();
+    }, [dependencies]);
+}
+exports.UseEffectWhileTruthy = UseEffectWhileTruthy;
 function UseComponentDidUpdate(callback) {
     UseAsyncEffect(callback);
 }

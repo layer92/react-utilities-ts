@@ -83,6 +83,52 @@ export function UseDelayedEffect(callback, dependencies, delayMs) {
     }
     UseAsyncEffect(callbackWithDelay, dependencies);
 }
+/** When all of the dependencies become defined, the callback will be called once. */
+export function UseEffectOnceWhenDefined(callback, dependencies) {
+    const [isCalled, setIsCalled] = useState(false);
+    UseAsyncEffect(async () => {
+        if (isCalled) {
+            return;
+        }
+        if (dependencies.some(a => a === undefined)) {
+            return;
+        }
+        setIsCalled(true);
+        await callback();
+    }, [dependencies]);
+}
+/** When all of the dependencies become truthy, the callback will be called once. */
+export function UseEffectOnceWhenTruthy(callback, dependencies) {
+    const [isCalled, setIsCalled] = useState(false);
+    UseAsyncEffect(async () => {
+        if (isCalled) {
+            return;
+        }
+        if (dependencies.some(a => !a)) {
+            return;
+        }
+        setIsCalled(true);
+        await callback();
+    }, [dependencies]);
+}
+/** Just like UseAsyncEffect, except the callback will only be enabled while all the dependencies are defined. */
+export function UseEffectWhileDefined(callback, dependencies) {
+    UseAsyncEffect(async () => {
+        if (dependencies.some(a => a === undefined)) {
+            return;
+        }
+        await callback();
+    }, [dependencies]);
+}
+/** Just like UseAsyncEffect, except the callback will only be enabled while all the dependencies are truthy. */
+export function UseEffectWhileTruthy(callback, dependencies) {
+    UseAsyncEffect(async () => {
+        if (dependencies.some(a => !a)) {
+            return;
+        }
+        await callback();
+    }, [dependencies]);
+}
 export function UseComponentDidUpdate(callback) {
     UseAsyncEffect(callback);
 }
