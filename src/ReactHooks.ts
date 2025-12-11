@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { DependencyList, useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 type Callback = ()=>void|Promise<void>;
@@ -44,13 +44,13 @@ export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialVa
         return JSON.parse(jsonString) as ValueType;
     }
     const [value,setValueInReact] = useState<ValueType>(loadOrSetInitialValue_getInitialValue());
-    function setValue(value:ValueType){
-        if(value===undefined||value===null){
+    function setValue(next:ValueType){
+        if(next===undefined||next===null){
             localStorage.removeItem(localStorageKey);
         }else{
-            localStorage.setItem(localStorageKey,JSON.stringify(value));
+            localStorage.setItem(localStorageKey,JSON.stringify(next));
         }
-        setValueInReact(value);
+        setValueInReact(next);
     }
     return [value,setValue] as const;
 }
@@ -69,13 +69,13 @@ export function UseSessionStorageValue<ValueType>(sessionStorageKey:string,initi
         return JSON.parse(jsonString) as ValueType;
     }
     const [value,setValueInReact] = useState<ValueType>(loadOrSetInitialValue_getInitialValue());
-    function setValue(value:ValueType){
-        if(value===undefined||value===null){
+    function setValue(next:ValueType){
+        if(next===undefined||next===null){
             sessionStorage.removeItem(sessionStorageKey);
         }else{
-            sessionStorage.setItem(sessionStorageKey,JSON.stringify(value));
+            sessionStorage.setItem(sessionStorageKey,JSON.stringify(next));
         }
-        setValueInReact(value);
+        setValueInReact(next);
     }
     return [value,setValue] as const;
 }
@@ -246,3 +246,45 @@ export function UseDebouncedCallback<Callback extends (...parameters:any[])=>voi
     }
     return debouncedCallback as Callback;
 }
+
+/**
+ * State, but whenever the dependencies change, it resets to the sourceValue. If no dependencies array is provided, the dependency array will default to [sourceValue]
+ * 
+ * You can use this to keep a local copy of data that you want to edit.
+ * */
+export function UseDependentState<Type>(sourceValue:Type|undefined,dependencies?:DependencyList){
+    dependencies=dependencies??[sourceValue];
+    const [state,setState] = useState<Type>();
+    useEffect(()=>{
+        setState(sourceValue);
+    },dependencies);
+    return [state,setState] as const;
+}
+
+/**
+ * Similar to useState, except that the initial state isn't set until the initial value becomes defined for the first time. ("the first time" = the first render in which intialValue is defined)
+ * 
+ * This is useful for when the initialValue is fed in from a value that's fetched asynchronously.
+ * */
+export function UseLateState<Type>(initialValue:Type|undefined){
+    const [initialized,setInitialized] = useState(false);
+    const [state,setState] = useState<Type>();
+    const setStateExternal = (value:Type|undefined)=>{
+        if(!initialized && value!==undefined){
+            setInitialized(true);
+        }
+        setState(value);
+    }
+    useEffect(()=>{
+        if(initialized){
+            return;
+        }
+        if(initialValue===undefined){
+            return;
+        }
+        setInitialized(true);
+        setState(initialValue);
+    },[initialValue]);
+    return [state,setStateExternal] as const;
+}
+
