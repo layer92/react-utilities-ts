@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import { DependencyList } from "react";
 type Callback = () => void | Promise<void>;
 type ResultCallback<ResultType> = () => ResultType | Promise<ResultType>;
 type Dependencies = React.DependencyList;
@@ -9,9 +9,9 @@ export declare function UseAsyncEffect(callback: Callback, dependencies?: Depend
 export declare function UseResult<ResultType>(callback: ResultCallback<ResultType>, dependencies?: Dependencies): ResultType | undefined;
 export declare function UseResultOnMount<ResultType>(callback: ResultCallback<ResultType>): ResultType | undefined;
 /** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. */
-export declare function UseLocalStorageValue<ValueType>(localStorageKey: string, initialValue: ValueType): readonly [ValueType, (value: ValueType) => void];
+export declare function UseLocalStorageValue<ValueType>(localStorageKey: string, initialValue: ValueType): readonly [ValueType, (next: ValueType) => void];
 /** Saves the provided value to sessionstorage. Handles JSON serialization/deserialization for you. */
-export declare function UseSessionStorageValue<ValueType>(sessionStorageKey: string, initialValue: ValueType): readonly [ValueType, (value: ValueType) => void];
+export declare function UseSessionStorageValue<ValueType>(sessionStorageKey: string, initialValue: ValueType): readonly [ValueType, (next: ValueType) => void];
 export declare function UseComponentDidMount(callback: Callback): void;
 export declare function UseDelayedComponentDidMount(callback: Callback, delayMs: number): void;
 export declare function UseDelayedEffect(callback: Callback, dependencies: Dependencies, delayMs: number): void;
@@ -49,4 +49,16 @@ export declare function UseDebouncedValue<Value>(value: Value, options?: {
 export declare function UseDebouncedCallback<Callback extends (...parameters: any[]) => void>(callback: Callback, options?: {
     delayMs?: number;
 }): Callback;
+/**
+ * State, but whenever the dependencies change, it resets to the sourceValue. If no dependencies array is provided, the dependency array will default to [sourceValue]
+ *
+ * You can use this to keep a local copy of data that you want to edit.
+ * */
+export declare function UseDependentState<Type>(sourceValue: Type | undefined, dependencies?: DependencyList): readonly [Type | undefined, import("react").Dispatch<import("react").SetStateAction<Type | undefined>>];
+/**
+ * Similar to useState, except that the initial state isn't set until the initial value becomes defined for the first time. ("the first time" = the first render in which intialValue is defined)
+ *
+ * This is useful for when the initialValue is fed in from a value that's fetched asynchronously.
+ * */
+export declare function UseLateState<Type>(initialValue: Type | undefined): readonly [Type | undefined, (value: Type | undefined) => void];
 export {};

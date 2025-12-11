@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UseDebouncedCallback = exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseEffectWhileTruthy = exports.UseEffectWhileDefined = exports.UseEffectOnceWhenTruthy = exports.UseEffectOnceWhenDefined = exports.UseEffectOnceCompletely = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseSessionStorageValue = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
+exports.UseLateState = exports.UseDependentState = exports.UseDebouncedCallback = exports.UseDebouncedValue = exports.UseUrlParameter = exports.UseQueryParameter = exports.UseLoopWhileMounted = exports.UseComponentWillUnmount = exports.UseComponentDidUpdate = exports.UseEffectWhileTruthy = exports.UseEffectWhileDefined = exports.UseEffectOnceWhenTruthy = exports.UseEffectOnceWhenDefined = exports.UseEffectOnceCompletely = exports.UseDelayedEffect = exports.UseDelayedComponentDidMount = exports.UseComponentDidMount = exports.UseSessionStorageValue = exports.UseLocalStorageValue = exports.UseResultOnMount = exports.UseResult = exports.UseAsyncEffect = void 0;
 const react_1 = require("react");
 const react_router_dom_1 = require("react-router-dom");
 function UseAsyncEffect(callback, dependencies) {
@@ -39,14 +39,14 @@ function UseLocalStorageValue(localStorageKey, initialValue) {
         return JSON.parse(jsonString);
     }
     const [value, setValueInReact] = (0, react_1.useState)(loadOrSetInitialValue_getInitialValue());
-    function setValue(value) {
-        if (value === undefined || value === null) {
+    function setValue(next) {
+        if (next === undefined || next === null) {
             localStorage.removeItem(localStorageKey);
         }
         else {
-            localStorage.setItem(localStorageKey, JSON.stringify(value));
+            localStorage.setItem(localStorageKey, JSON.stringify(next));
         }
-        setValueInReact(value);
+        setValueInReact(next);
     }
     return [value, setValue];
 }
@@ -64,14 +64,14 @@ function UseSessionStorageValue(sessionStorageKey, initialValue) {
         return JSON.parse(jsonString);
     }
     const [value, setValueInReact] = (0, react_1.useState)(loadOrSetInitialValue_getInitialValue());
-    function setValue(value) {
-        if (value === undefined || value === null) {
+    function setValue(next) {
+        if (next === undefined || next === null) {
             sessionStorage.removeItem(sessionStorageKey);
         }
         else {
-            sessionStorage.setItem(sessionStorageKey, JSON.stringify(value));
+            sessionStorage.setItem(sessionStorageKey, JSON.stringify(next));
         }
-        setValueInReact(value);
+        setValueInReact(next);
     }
     return [value, setValue];
 }
@@ -238,3 +238,44 @@ function UseDebouncedCallback(callback, options) {
     return debouncedCallback;
 }
 exports.UseDebouncedCallback = UseDebouncedCallback;
+/**
+ * State, but whenever the dependencies change, it resets to the sourceValue. If no dependencies array is provided, the dependency array will default to [sourceValue]
+ *
+ * You can use this to keep a local copy of data that you want to edit.
+ * */
+function UseDependentState(sourceValue, dependencies) {
+    dependencies = dependencies ?? [sourceValue];
+    const [state, setState] = (0, react_1.useState)();
+    (0, react_1.useEffect)(() => {
+        setState(sourceValue);
+    }, dependencies);
+    return [state, setState];
+}
+exports.UseDependentState = UseDependentState;
+/**
+ * Similar to useState, except that the initial state isn't set until the initial value becomes defined for the first time. ("the first time" = the first render in which intialValue is defined)
+ *
+ * This is useful for when the initialValue is fed in from a value that's fetched asynchronously.
+ * */
+function UseLateState(initialValue) {
+    const [initialized, setInitialized] = (0, react_1.useState)(false);
+    const [state, setState] = (0, react_1.useState)();
+    const setStateExternal = (value) => {
+        if (!initialized && value !== undefined) {
+            setInitialized(true);
+        }
+        setState(value);
+    };
+    (0, react_1.useEffect)(() => {
+        if (initialized) {
+            return;
+        }
+        if (initialValue === undefined) {
+            return;
+        }
+        setInitialized(true);
+        setState(initialValue);
+    }, [initialValue]);
+    return [state, setStateExternal];
+}
+exports.UseLateState = UseLateState;

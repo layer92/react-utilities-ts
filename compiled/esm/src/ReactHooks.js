@@ -33,14 +33,14 @@ export function UseLocalStorageValue(localStorageKey, initialValue) {
         return JSON.parse(jsonString);
     }
     const [value, setValueInReact] = useState(loadOrSetInitialValue_getInitialValue());
-    function setValue(value) {
-        if (value === undefined || value === null) {
+    function setValue(next) {
+        if (next === undefined || next === null) {
             localStorage.removeItem(localStorageKey);
         }
         else {
-            localStorage.setItem(localStorageKey, JSON.stringify(value));
+            localStorage.setItem(localStorageKey, JSON.stringify(next));
         }
-        setValueInReact(value);
+        setValueInReact(next);
     }
     return [value, setValue];
 }
@@ -57,14 +57,14 @@ export function UseSessionStorageValue(sessionStorageKey, initialValue) {
         return JSON.parse(jsonString);
     }
     const [value, setValueInReact] = useState(loadOrSetInitialValue_getInitialValue());
-    function setValue(value) {
-        if (value === undefined || value === null) {
+    function setValue(next) {
+        if (next === undefined || next === null) {
             sessionStorage.removeItem(sessionStorageKey);
         }
         else {
-            sessionStorage.setItem(sessionStorageKey, JSON.stringify(value));
+            sessionStorage.setItem(sessionStorageKey, JSON.stringify(next));
         }
-        setValueInReact(value);
+        setValueInReact(next);
     }
     return [value, setValue];
 }
@@ -214,4 +214,43 @@ export function UseDebouncedCallback(callback, options) {
         timeouts.push(timeout);
     };
     return debouncedCallback;
+}
+/**
+ * State, but whenever the dependencies change, it resets to the sourceValue. If no dependencies array is provided, the dependency array will default to [sourceValue]
+ *
+ * You can use this to keep a local copy of data that you want to edit.
+ * */
+export function UseDependentState(sourceValue, dependencies) {
+    dependencies = dependencies ?? [sourceValue];
+    const [state, setState] = useState();
+    useEffect(() => {
+        setState(sourceValue);
+    }, dependencies);
+    return [state, setState];
+}
+/**
+ * Similar to useState, except that the initial state isn't set until the initial value becomes defined for the first time. ("the first time" = the first render in which intialValue is defined)
+ *
+ * This is useful for when the initialValue is fed in from a value that's fetched asynchronously.
+ * */
+export function UseLateState(initialValue) {
+    const [initialized, setInitialized] = useState(false);
+    const [state, setState] = useState();
+    const setStateExternal = (value) => {
+        if (!initialized && value !== undefined) {
+            setInitialized(true);
+        }
+        setState(value);
+    };
+    useEffect(() => {
+        if (initialized) {
+            return;
+        }
+        if (initialValue === undefined) {
+            return;
+        }
+        setInitialized(true);
+        setState(initialValue);
+    }, [initialValue]);
+    return [state, setStateExternal];
 }
