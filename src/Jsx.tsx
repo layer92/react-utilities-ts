@@ -1,4 +1,4 @@
-import { ElementType } from "react";
+import { ElementType, Fragment } from "react";
 
 type ElementLike = string|JSX.Element|JSX.Element[]|undefined;
 
@@ -27,9 +27,9 @@ export function JoinEnglishTermsJsx(array:ElementLike[],baseSeparator?:ElementLi
     for(let i=0;i<length;++i){
         result.push(array[i]);
         if(i===length-1){
-            result.push(finalSeparator);
+            result.push(<Fragment key={i+"f"}>{finalSeparator}</Fragment>);
         }else{
-            result.push(baseSeparator);
+            result.push(<Fragment key={i+"b"}>{baseSeparator}</Fragment>);
         }
     }
     return <>{result}</>;

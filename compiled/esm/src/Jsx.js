@@ -1,4 +1,5 @@
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Fragment } from "react";
 /**
  * Lets you join terms in a grammatically-correct way. Defaults to JoinEnglishTermsJsx(["a","b","c"]) = <>a, b, and c</>
  *
@@ -26,10 +27,10 @@ export function JoinEnglishTermsJsx(array, baseSeparator, twoSeparator, finalSep
     for (let i = 0; i < length; ++i) {
         result.push(array[i]);
         if (i === length - 1) {
-            result.push(finalSeparator);
+            result.push(_jsx(Fragment, { children: finalSeparator }, i + "f"));
         }
         else {
-            result.push(baseSeparator);
+            result.push(_jsx(Fragment, { children: baseSeparator }, i + "b"));
         }
     }
     return _jsx(_Fragment, { children: result });

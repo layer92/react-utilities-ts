@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JoinEnglishTermsJsx = void 0;
 const jsx_runtime_1 = require("react/jsx-runtime");
+const react_1 = require("react");
 /**
  * Lets you join terms in a grammatically-correct way. Defaults to JoinEnglishTermsJsx(["a","b","c"]) = <>a, b, and c</>
  *
@@ -29,10 +30,10 @@ function JoinEnglishTermsJsx(array, baseSeparator, twoSeparator, finalSeparator)
     for (let i = 0; i < length; ++i) {
         result.push(array[i]);
         if (i === length - 1) {
-            result.push(finalSeparator);
+            result.push((0, jsx_runtime_1.jsx)(react_1.Fragment, { children: finalSeparator }, i + "f"));
         }
         else {
-            result.push(baseSeparator);
+            result.push((0, jsx_runtime_1.jsx)(react_1.Fragment, { children: baseSeparator }, i + "b"));
         }
     }
     return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: result });
