@@ -26,7 +26,7 @@ export function JoinEnglishTermsJsx(array:ElementLike[],baseSeparator?:ElementLi
     const result:ElementLike[] = [];
     for(let i=0;i<length;++i){
         result.push(array[i]);
-        if(i===length-1){
+        if(i===length-2){
             result.push(<Fragment key={i+"f"}>{finalSeparator}</Fragment>);
         }else{
             result.push(<Fragment key={i+"b"}>{baseSeparator}</Fragment>);

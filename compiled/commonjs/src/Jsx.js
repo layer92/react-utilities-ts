@@ -29,7 +29,7 @@ function JoinEnglishTermsJsx(array, baseSeparator, twoSeparator, finalSeparator)
     const result = [];
     for (let i = 0; i < length; ++i) {
         result.push(array[i]);
-        if (i === length - 1) {
+        if (i === length - 2) {
             result.push((0, jsx_runtime_1.jsx)(react_1.Fragment, { children: finalSeparator }, i + "f"));
         }
         else {

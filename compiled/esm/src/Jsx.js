@@ -26,7 +26,7 @@ export function JoinEnglishTermsJsx(array, baseSeparator, twoSeparator, finalSep
     const result = [];
     for (let i = 0; i < length; ++i) {
         result.push(array[i]);
-        if (i === length - 1) {
+        if (i === length - 2) {
             result.push(_jsx(Fragment, { children: finalSeparator }, i + "f"));
         }
         else {
