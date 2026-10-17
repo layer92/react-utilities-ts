@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JoinEnglishTermsJsx = void 0;
+exports.JoinTermsJsx = void 0;
 const jsx_runtime_1 = require("react/jsx-runtime");
 const react_1 = require("react");
 /**
- * Lets you join terms in a grammatically-correct way. Defaults to JoinEnglishTermsJsx(["a","b","c"]) = <>a, b, and c</>
+ * Lets you join terms in an English grammatically-correct way. Defaults to JoinTermsJsx(["a","b","c"]) = <>a, b, and c</>
  *
  * https://en.wikipedia.org/wiki/Serial_comma
  * @param array
@@ -12,7 +12,7 @@ const react_1 = require("react");
  * @param baseSeparator Defaults to " and " Used when there are exactly two items.
  * @param finalSeparator Defaults ", and "
  */
-function JoinEnglishTermsJsx(array, baseSeparator, twoSeparator, finalSeparator) {
+function JoinTermsJsx(array, baseSeparator, twoSeparator, finalSeparator) {
     const length = array.length;
     if (length === 0) {
         return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {});
@@ -38,4 +38,4 @@ function JoinEnglishTermsJsx(array, baseSeparator, twoSeparator, finalSeparator)
     }
     return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: result });
 }
-exports.JoinEnglishTermsJsx = JoinEnglishTermsJsx;
+exports.JoinTermsJsx = JoinTermsJsx;

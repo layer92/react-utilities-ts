@@ -3,7 +3,7 @@ import { ElementType, Fragment } from "react";
 type ElementLike = string|JSX.Element|JSX.Element[]|undefined;
 
 /**
- * Lets you join terms in a grammatically-correct way. Defaults to JoinEnglishTermsJsx(["a","b","c"]) = <>a, b, and c</>
+ * Lets you join terms in an English grammatically-correct way. Defaults to JoinTermsJsx(["a","b","c"]) = <>a, b, and c</>
  *
  * https://en.wikipedia.org/wiki/Serial_comma
  * @param array 
@@ -11,7 +11,7 @@ type ElementLike = string|JSX.Element|JSX.Element[]|undefined;
  * @param baseSeparator Defaults to " and " Used when there are exactly two items. 
  * @param finalSeparator Defaults ", and "
  */
-export function JoinEnglishTermsJsx(array:ElementLike[],baseSeparator?:ElementLike,twoSeparator?:ElementLike,finalSeparator?:ElementLike):JSX.Element{
+export function JoinTermsJsx(array:ElementLike[],baseSeparator?:ElementLike,twoSeparator?:ElementLike,finalSeparator?:ElementLike):JSX.Element{
     const length = array.length;
     if(length===0){
         return <></>;

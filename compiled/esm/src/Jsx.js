@@ -1,7 +1,7 @@
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Fragment } from "react";
 /**
- * Lets you join terms in a grammatically-correct way. Defaults to JoinEnglishTermsJsx(["a","b","c"]) = <>a, b, and c</>
+ * Lets you join terms in an English grammatically-correct way. Defaults to JoinTermsJsx(["a","b","c"]) = <>a, b, and c</>
  *
  * https://en.wikipedia.org/wiki/Serial_comma
  * @param array
@@ -9,7 +9,7 @@ import { Fragment } from "react";
  * @param baseSeparator Defaults to " and " Used when there are exactly two items.
  * @param finalSeparator Defaults ", and "
  */
-export function JoinEnglishTermsJsx(array, baseSeparator, twoSeparator, finalSeparator) {
+export function JoinTermsJsx(array, baseSeparator, twoSeparator, finalSeparator) {
     const length = array.length;
     if (length === 0) {
         return _jsx(_Fragment, {});
