@@ -28,7 +28,7 @@ export function JoinTermsJsx(array:ElementLike[],baseSeparator?:ElementLike,twoS
         result.push(array[i]);
         if(i===length-2){
             result.push(<Fragment key={i+"f"}>{finalSeparator}</Fragment>);
-        }else{
+        }else if(i!==length-1){
             result.push(<Fragment key={i+"b"}>{baseSeparator}</Fragment>);
         }
     }

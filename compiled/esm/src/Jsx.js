@@ -29,7 +29,7 @@ export function JoinTermsJsx(array, baseSeparator, twoSeparator, finalSeparator)
         if (i === length - 2) {
             result.push(_jsx(Fragment, { children: finalSeparator }, i + "f"));
         }
-        else {
+        else if (i !== length - 1) {
             result.push(_jsx(Fragment, { children: baseSeparator }, i + "b"));
         }
     }
