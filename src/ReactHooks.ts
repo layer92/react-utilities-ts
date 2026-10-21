@@ -31,8 +31,8 @@ export function UseResultOnMount<ResultType>(callback:ResultCallback<ResultType>
     return UseResult(callback,[]);
 }
 
-/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. If the localStorageKey changes, the value will re-load from the new location. */
-export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialValue:ValueType){
+/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. If the localStorageKey changes, the value will re-load from the new localstorage key. */
+export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialValue:ValueType):[ValueType, React.Dispatch<React.SetStateAction<ValueType>>]{
     const loadOrSetInitialValue_getInitialValue = ()=>{
         const jsonString = localStorage.getItem(localStorageKey);
         if(jsonString===null){
@@ -46,10 +46,10 @@ export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialVa
     const localInitialValue = useMemo(loadOrSetInitialValue_getInitialValue,[
         localStorageKey
     ]);
-    const [value,setValueInReact] = UseDependentState<ValueType>(localInitialValue,
+    const [value,setValueInReact] = UseDependentState(localInitialValue,
         [localStorageKey]
     );
-    function setValue(next:ValueType){
+    const setValue:(value: React.SetStateAction<ValueType>)=>void = (next)=>{
         if(next===undefined||next===null){
             localStorage.removeItem(localStorageKey);
         }else{
@@ -57,7 +57,7 @@ export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialVa
         }
         setValueInReact(next);
     }
-    return [value,setValue] as const;
+    return [value,setValue];
 }
 
 
@@ -257,13 +257,13 @@ export function UseDebouncedCallback<Callback extends (...parameters:any[])=>voi
  * 
  * You can use this to keep a local copy of data that you want to edit.
  * */
-export function UseDependentState<Type>(sourceValue:Type|undefined,dependencies?:DependencyList){
+export function UseDependentState<Type>(sourceValue:Type,dependencies?:DependencyList):[Type, React.Dispatch<React.SetStateAction<Type>>]{
     dependencies=dependencies??[sourceValue];
-    const [state,setState] = useState<Type>();
+    const [state,setState] = useState<Type>(sourceValue);
     useEffect(()=>{
         setState(sourceValue);
     },dependencies);
-    return [state,setState] as const;
+    return [state,setState];
 }
 
 /**
