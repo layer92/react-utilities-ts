@@ -20,7 +20,7 @@ export function UseResult(callback, dependencies) {
 export function UseResultOnMount(callback) {
     return UseResult(callback, []);
 }
-/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. If the localStorageKey changes, the value will re-load from the new location. */
+/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. If the localStorageKey changes, the value will re-load from the new localstorage key. */
 export function UseLocalStorageValue(localStorageKey, initialValue) {
     const loadOrSetInitialValue_getInitialValue = () => {
         const jsonString = localStorage.getItem(localStorageKey);
@@ -36,7 +36,7 @@ export function UseLocalStorageValue(localStorageKey, initialValue) {
         localStorageKey
     ]);
     const [value, setValueInReact] = UseDependentState(localInitialValue, [localStorageKey]);
-    function setValue(next) {
+    const setValue = (next) => {
         if (next === undefined || next === null) {
             localStorage.removeItem(localStorageKey);
         }
@@ -44,7 +44,7 @@ export function UseLocalStorageValue(localStorageKey, initialValue) {
             localStorage.setItem(localStorageKey, JSON.stringify(next));
         }
         setValueInReact(next);
-    }
+    };
     return [value, setValue];
 }
 /** Saves the provided value to sessionstorage. Handles JSON serialization/deserialization for you. */
@@ -225,7 +225,7 @@ export function UseDebouncedCallback(callback, options) {
  * */
 export function UseDependentState(sourceValue, dependencies) {
     dependencies = dependencies ?? [sourceValue];
-    const [state, setState] = useState();
+    const [state, setState] = useState(sourceValue);
     useEffect(() => {
         setState(sourceValue);
     }, dependencies);
