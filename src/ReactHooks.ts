@@ -1,4 +1,4 @@
-import { DependencyList, useEffect, useState } from "react";
+import { DependencyList, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 type Callback = ()=>void|Promise<void>;
@@ -31,9 +31,9 @@ export function UseResultOnMount<ResultType>(callback:ResultCallback<ResultType>
     return UseResult(callback,[]);
 }
 
-/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. */
+/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. If the localStorageKey changes, the value will re-load from the new location. */
 export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialValue:ValueType){
-    function loadOrSetInitialValue_getInitialValue(){
+    const loadOrSetInitialValue_getInitialValue = ()=>{
         const jsonString = localStorage.getItem(localStorageKey);
         if(jsonString===null){
             if(initialValue!==undefined&&initialValue!==null){
@@ -43,7 +43,12 @@ export function UseLocalStorageValue<ValueType>(localStorageKey:string,initialVa
         }
         return JSON.parse(jsonString) as ValueType;
     }
-    const [value,setValueInReact] = useState<ValueType>(loadOrSetInitialValue_getInitialValue());
+    const localInitialValue = useMemo(loadOrSetInitialValue_getInitialValue,[
+        localStorageKey
+    ]);
+    const [value,setValueInReact] = UseDependentState<ValueType>(localInitialValue,
+        [localStorageKey]
+    );
     function setValue(next:ValueType){
         if(next===undefined||next===null){
             localStorage.removeItem(localStorageKey);

@@ -8,8 +8,8 @@ export declare function UseAsyncEffect(callback: Callback, dependencies?: Depend
  */
 export declare function UseResult<ResultType>(callback: ResultCallback<ResultType>, dependencies?: Dependencies): ResultType | undefined;
 export declare function UseResultOnMount<ResultType>(callback: ResultCallback<ResultType>): ResultType | undefined;
-/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. */
-export declare function UseLocalStorageValue<ValueType>(localStorageKey: string, initialValue: ValueType): readonly [ValueType, (next: ValueType) => void];
+/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. If the localStorageKey changes, the value will re-load from the new location. */
+export declare function UseLocalStorageValue<ValueType>(localStorageKey: string, initialValue: ValueType): readonly [ValueType | undefined, (next: ValueType) => void];
 /** Saves the provided value to sessionstorage. Handles JSON serialization/deserialization for you. */
 export declare function UseSessionStorageValue<ValueType>(sessionStorageKey: string, initialValue: ValueType): readonly [ValueType, (next: ValueType) => void];
 export declare function UseComponentDidMount(callback: Callback): void;

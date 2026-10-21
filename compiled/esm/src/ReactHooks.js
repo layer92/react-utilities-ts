@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 export function UseAsyncEffect(callback, dependencies) {
     useEffect(() => {
@@ -20,9 +20,9 @@ export function UseResult(callback, dependencies) {
 export function UseResultOnMount(callback) {
     return UseResult(callback, []);
 }
-/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. */
+/** Saves the provided value to localstorage. Handles JSON serialization/deserialization for you. If the localStorageKey changes, the value will re-load from the new location. */
 export function UseLocalStorageValue(localStorageKey, initialValue) {
-    function loadOrSetInitialValue_getInitialValue() {
+    const loadOrSetInitialValue_getInitialValue = () => {
         const jsonString = localStorage.getItem(localStorageKey);
         if (jsonString === null) {
             if (initialValue !== undefined && initialValue !== null) {
@@ -31,8 +31,11 @@ export function UseLocalStorageValue(localStorageKey, initialValue) {
             return initialValue;
         }
         return JSON.parse(jsonString);
-    }
-    const [value, setValueInReact] = useState(loadOrSetInitialValue_getInitialValue());
+    };
+    const localInitialValue = useMemo(loadOrSetInitialValue_getInitialValue, [
+        localStorageKey
+    ]);
+    const [value, setValueInReact] = UseDependentState(localInitialValue, [localStorageKey]);
     function setValue(next) {
         if (next === undefined || next === null) {
             localStorage.removeItem(localStorageKey);
